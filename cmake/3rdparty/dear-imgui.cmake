@@ -16,6 +16,12 @@ file( GLOB dear_IMGUI_SOURCES ${BGFX_DIR}/3rdparty/dear-imgui/*.cpp ${BGFX_DIR}/
 
 add_library( dear-imgui STATIC EXCLUDE_FROM_ALL ${dear_IMGUI_SOURCES} )
 target_compile_definitions( dear-imgui PRIVATE "-D_CRT_SECURE_NO_WARNINGS" "-D__STDC_FORMAT_MACROS" )
-target_include_directories( dear-imgui PUBLIC ${BGFX_DIR}/3rdparty )
+get_target_property(DEAR_IMGUI_PUBLIC_HEADERS dear-imgui INTERFACE_SOURCES)
+set_target_properties(dear-imgui PROPERTIES PUBLIC_HEADER "${DEAR_IMGUI_PUBLIC_HEADERS}")
+install(TARGETS dear-imgui PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_PREFIX}/include/3rdparty/dear-imgui")
+target_include_directories( dear-imgui PUBLIC
+	$<BUILD_INTERFACE:${BGFX_DIR}/3rdparty>
+	$<INSTALL_INTERFACE:include/3rdparty>
+)
 target_link_libraries( dear-imgui PUBLIC bx )
 set_target_properties( dear-imgui PROPERTIES FOLDER "bgfx/3rdparty" )
