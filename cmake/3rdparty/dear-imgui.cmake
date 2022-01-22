@@ -13,12 +13,12 @@ if( TARGET dear-imgui )
 endif()
 
 file( GLOB dear_IMGUI_SOURCES ${BGFX_DIR}/3rdparty/dear-imgui/*.cpp ${BGFX_DIR}/3rdparty/dear-imgui/*.h ${BGFX_DIR}/3rdparty/dear-imgui/*.inl )
-
+file( GLOB dear_IMGUI_HEADERS ${BGFX_DIR}/3rdparty/dear-imgui/*.h ${BGFX_DIR}/3rdparty/dear-imgui/*.inl)
+file( GLOB dear_IMGUI_WIDGET_HEADERS ${BGFX_DIR}/3rdparty/dear-imgui/widgets/*.h ${BGFX_DIR}/3rdparty/dear-imgui/widgets/*.inl )
 add_library( dear-imgui STATIC EXCLUDE_FROM_ALL ${dear_IMGUI_SOURCES} )
 target_compile_definitions( dear-imgui PRIVATE "-D_CRT_SECURE_NO_WARNINGS" "-D__STDC_FORMAT_MACROS" )
-get_target_property(DEAR_IMGUI_PUBLIC_HEADERS dear-imgui INTERFACE_SOURCES)
-set_target_properties(dear-imgui PROPERTIES PUBLIC_HEADER "${DEAR_IMGUI_PUBLIC_HEADERS}")
-install(TARGETS dear-imgui PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_PREFIX}/include/3rdparty/dear-imgui")
+install(FILES ${dear_IMGUI_HEADERS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include/3rdparty/dear-imgui")
+install(FILES ${dear_IMGUI_WIDGET_HEADERS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include/3rdparty/dear-imgui/widgets")
 target_include_directories( dear-imgui PUBLIC
 	$<BUILD_INTERFACE:${BGFX_DIR}/3rdparty>
 	$<INSTALL_INTERFACE:include/3rdparty>
