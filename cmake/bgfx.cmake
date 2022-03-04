@@ -47,7 +47,7 @@ else()
 endif()
 
 if(BGFX_CONFIG_RENDERER_WEBGPU)
-    include(cmake/3rdparty/webgpu.cmake)
+    include(${CMAKE_CURRENT_LIST_DIR}/3rdparty/webgpu.cmake)
     target_compile_definitions( bgfx PRIVATE BGFX_CONFIG_RENDERER_WEBGPU=1)
     if (EMSCRIPTEN)
         target_link_options(bgfx PRIVATE "-s USE_WEBGPU=1")
@@ -70,12 +70,7 @@ if( MSVC )
 endif()
 
 # Add debug config required in bx headers since bx is private
-if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-    target_compile_definitions( bgfx PUBLIC "BX_CONFIG_DEBUG=1" )
-else()
-    target_compile_definitions( bgfx PUBLIC "BX_CONFIG_DEBUG=0" )
-endif()
-
+target_compile_definitions(bgfx PUBLIC "BX_CONFIG_DEBUG=$<CONFIG:Debug>")
 
 # Includes
 target_include_directories( bgfx
@@ -92,15 +87,20 @@ target_link_libraries( bgfx PRIVATE bx bimg )
 
 # Frameworks required on iOS, tvOS and macOS
 if( ${CMAKE_SYSTEM_NAME} MATCHES iOS|tvOS )
-	target_link_libraries (bgfx PUBLIC "-framework OpenGLES  -framework Metal -framework UIKit -framework CoreGraphics -framework QuartzCore")
+	target_link_libraries (bgfx PUBLIC 
+		"-framework OpenGLES -framework Metal -framework UIKit -framework CoreGraphics -framework QuartzCore -framework IOKit -framework CoreFoundation")
 elseif( APPLE )
 	find_library( COCOA_LIBRARY Cocoa )
 	find_library( METAL_LIBRARY Metal )
 	find_library( QUARTZCORE_LIBRARY QuartzCore )
+	find_library( IOKIT_LIBRARY IOKit )
+	find_library( COREFOUNDATION_LIBRARY CoreFoundation )
 	mark_as_advanced( COCOA_LIBRARY )
 	mark_as_advanced( METAL_LIBRARY )
 	mark_as_advanced( QUARTZCORE_LIBRARY )
-	target_link_libraries( bgfx PUBLIC ${COCOA_LIBRARY} ${METAL_LIBRARY} ${QUARTZCORE_LIBRARY} )
+	mark_as_advanced( IOKIT_LIBRARY )
+	mark_as_advanced( COREFOUNDATION_LIBRARY )
+	target_link_libraries( bgfx PUBLIC ${COCOA_LIBRARY} ${METAL_LIBRARY} ${QUARTZCORE_LIBRARY} ${IOKIT_LIBRARY} ${COREFOUNDATION_LIBRARY} )
 endif()
 
 if( UNIX AND NOT APPLE AND NOT EMSCRIPTEN AND NOT ANDROID )
