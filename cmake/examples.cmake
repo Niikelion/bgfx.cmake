@@ -14,6 +14,7 @@ include( cmake/util/ConfigureDebugging.cmake )
 
 include( cmake/3rdparty/dear-imgui.cmake )
 include( cmake/3rdparty/meshoptimizer.cmake )
+include( cmake/3rdparty/stb.cmake )
 
 function( add_bgfx_shader FILE FOLDER )
 	get_filename_component( FILENAME "${FILE}" NAME_WE )
