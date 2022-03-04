@@ -13,11 +13,9 @@ if( TARGET meshoptimizer )
 endif()
 
 file( GLOB MESHOPTIMIZER_SOURCES ${BGFX_DIR}/3rdparty/meshoptimizer/src/*.cpp ${BGFX_DIR}/3rdparty/meshoptimizer/src/*.h )
-
+file( GLOB MESHOPTIMIZER_HEADERS ${BGFX_DIR}/3rdparty/meshoptimizer/src/*.h )
 add_library( meshoptimizer STATIC ${MESHOPTIMIZER_SOURCES} )
-get_target_property(MESHOPTIMIZER_PUBLIC_HEADERS meshoptimizer INTERFACE_SOURCES)
-set_target_properties(meshoptimizer PROPERTIES PUBLIC_HEADER "${MESHOPTIMIZER_PUBLIC_HEADERS}")
-install(TARGETS meshoptimizer PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_PREFIX}/include/3rdparty/meshoptimizer")
+install(FILES ${MESHOPTIMIZER_HEADERS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include/3rdparty/meshoptimizer/src")
 target_include_directories( meshoptimizer PUBLIC
 	$<BUILD_INTERFACE:${BGFX_DIR}/3rdparty>
 	$<INSTALL_INTERFACE:include/3rdparty>
